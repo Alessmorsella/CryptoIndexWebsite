@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cryptocurrency Buy/Sell Index</title>
+<script>
+    function getCryptopIndex(data){
+      var indexScore = data[0].crypto_index;
+      var priceIndex=data[0].price;
+      var redditIndex=data[0].reddit.score;
+      var twitterIndex=data[0].twitter.score;
+      var newsIndex=data[0].news.score;
+      var daterefresh=data[0].last_updated;
+
+      var percentageIndex = indexScore * 180 / 100;
+      var percentageIndexString = percentageIndex.toString() + 'deg';
+
+      var pricePercentageIndex = priceIndex * 180 / 100;
+      var priceIndexString = pricePercentageIndex.toString() + 'deg';
+
+      var redditPercentageIndex = redditIndex * 180 / 100;
+      var redditIndexString = redditPercentageIndex.toString() + 'deg';
+
+      var twitterPercentageIndex = twitterIndex * 180 / 100;
+      var twitterIndexString = twitterPercentageIndex.toString() + 'deg';
+
+      var newsPercentageIndex = newsIndex * 180 / 100;
+      var newsIndexString = newsPercentageIndex.toString() + 'deg';
+
+      document.getElementById("totindex").innerHTML = indexScore;
+      document.documentElement.style.setProperty('--rotation1', percentageIndexString);
+      document.getElementById("priceindex").innerHTML = priceIndex;
+      document.documentElement.style.setProperty('--rotation2', priceIndexString);
+      document.getElementById("redditindex").innerHTML = redditIndex;
+      document.documentElement.style.setProperty('--rotation3', redditIndexString);
+      document.getElementById("twitterindex").innerHTML = twitterIndex;
+      document.documentElement.style.setProperty('--rotation4', twitterIndexString);
+      document.getElementById("newsindex").innerHTML = newsIndex;
+      document.documentElement.style.setProperty('--rotation5', newsIndexString);
+      document.getElementById("lastupdated").innerHTML = daterefresh;
+
+      return [indexScore, priceIndex, redditIndex, twitterIndex, newsIndex,daterefresh];
+    }
+
+
+    function getCryptolist(){
+        cryptolist =["Bitcoin", "Ethereum", "BNB", "XRP", "Cardano", "Dogecoin", "Polygon Matic", "Polkadot", "Solana", "Shib"];
+        return cryptolist;
+    }
+
+    async function getapi() {
+          const options = { 'content-type': 'application/json', method: 'GET', redirect: 'follow'};
+          api_url = 'https://cryptoindex.cf/results/bitcoin'
+          let headers = new Headers();
+          // Storing response
+          const response = await fetch(api_url, options);
+          // Storing data in form of JSON
+          var data = await response.json();
+          console.log(data);
+          if (response) {
+            hideloader();
+          }
+        let indexes = getCryptopIndex(data);
+        return indexes;
+
+      }
+    // Calling that async function
+    getapi();
+
+    // Function to hide the loader
+    function hideloader() {
+      document.getElementById('NotTotIndex').style.display = 'none';
+      document.getElementById('NotPriceIndex').style.display = 'none';
+      document.getElementById('NotRedditIndex').style.display = 'none';
+      document.getElementById('NotTwitterIndex').style.display = 'none';
+      document.getElementById('NotNewsIndex').style.display = 'none';
+    }
+
+</script>
+
+<style>
+body {
+  font-family: Arial;
+
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.header {
+  text-align: center;
+  background: rgba(236, 112, 14, 0.88);
+  color: rgb(255, 255, 255);
+  font-size: 30px;
+  top:0;
+
+}
+ul.nav {
+  padding-left: 0px;
+  text-align: left;
+  position: relative;
+  bottom:0;
+  left:0;
+}
+ul.nav > li {
+  display: inline-block;
+  padding: 10px 20px;
+
+}
+ul.nav > li:hover {
+  background-color: #2779BF;
+}
+ul.nav > li > a {
+  color: white;
+  text-decoration: none;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.header h1{
+  margin: 0;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.gauget {
+    position: absolute;
+    top: 250px;
+    left: 650px;
+    border-radius: 50%/100% 100% 0 0;
+    background-color: var(--color, #a22);
+    overflow: hidden;
+}
+.gauget:before{
+    content: "";
+    display: block;
+    padding-top: 50%;   /* ratio of 2:1*/
+}
+.gauget .mask {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  top: 40%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%/100% 100% 0 0;
+}
+
+.gauget .percentage {
+    position:  absolute;
+    top: -1px;
+    left: -1px;
+    bottom: 0;
+    right: -1px;
+    background-color: var(--background, #aaa);
+    transform:rotate(var(--rotation1));
+    transform-origin: bottom center;
+    transition-duration: 600ms;
+
+}
+
+.gauget .value {
+  position:absolute; bottom:0; left:0;
+  width:100%;
+  text-align: center;
+  font-weight: 800;
+
+}
+.gaugep {
+    position: absolute;
+    top: 500px;
+    left: 600px;
+    border-radius: 50%/100% 100% 0 0;
+    background-color: var(--color, #a22);
+    overflow: hidden;
+}
+.gaugep:before{
+    content: "";
+    display: block;
+    padding-top: 50%;   /* ratio of 2:1*/
+}
+.gaugep .mask {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  top: 40%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%/100% 100% 0 0;
+}
+
+.gaugep .percentage {
+    position:  absolute;
+    top: -1px;
+    left: -1px;
+    bottom: 0;
+    right: -1px;
+    background-color: var(--background, #aaa);
+    transform:rotate(var(--rotation2));
+    transform-origin: bottom center;
+    transition-duration: 600ms;
+
+}
+
+.gaugep .value {
+  position:absolute; bottom:0; left:0;
+  width:100%;
+  text-align: center;
+  font-weight: 800;
+
+}
+
+.gaugetw {
+    position: absolute;
+    top: 500px;
+    left: 1100px;
+    border-radius: 50%/100% 100% 0 0;
+    background-color: var(--color, #a22);
+    overflow: hidden;
+}
+.gaugetw:before{
+    content: "";
+    display: block;
+    padding-top: 50%;   /* ratio of 2:1*/
+}
+.gaugetw .mask {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  top: 40%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%/100% 100% 0 0;
+}
+
+.gaugetw .percentage {
+    position:  absolute;
+    top: -1px;
+    left: -1px;
+    bottom: 0;
+    right: -1px;
+    background-color: var(--background, #aaa);
+    transform:rotate(var(--rotation4));
+    transform-origin: bottom center;
+    transition-duration: 600ms;
+
+}
+
+.gaugetw .value {
+  position:absolute; bottom:0; left:0;
+  width:100%;
+  text-align: center;
+  font-weight: 800;
+
+}
+
+.gauger {
+    position: absolute;
+    top: 500px;
+    left: 850px;
+    border-radius: 50%/100% 100% 0 0;
+    background-color: var(--color, #a22);
+    overflow: hidden;
+}
+.gauger:before{
+    content: "";
+    display: block;
+    padding-top: 50%;   /* ratio of 2:1*/
+}
+.gauger .mask {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  top: 40%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%/100% 100% 0 0;
+}
+
+.gauger .percentage {
+    position:  absolute;
+    top: -1px;
+    left: -1px;
+    bottom: 0;
+    right: -1px;
+    background-color: var(--background, #aaa);
+    transform:rotate(var(--rotation3));
+    transform-origin: bottom center;
+    transition-duration: 600ms;
+}
+
+.gauger .value {
+  position:absolute; bottom:0; left:0;
+  width:100%;
+  text-align: center;
+  font-weight: 800;
+
+}
+
+.gaugen {
+    position: absolute;
+    top: 500px;
+    left: 350px;
+    border-radius: 50%/100% 100% 0 0;
+    background-color: var(--color, #a22);
+    overflow: hidden;
+}
+.gaugen:before{
+    content: "";
+    display: block;
+    padding-top: 50%;   /* ratio of 2:1*/
+}
+.gaugen .mask {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  top: 40%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%/100% 100% 0 0;
+}
+
+.gaugen .percentage {
+    position:  absolute;
+    top: -1px;
+    left: -1px;
+    bottom: 0;
+    right: -1px;
+    background-color: var(--background, #aaa);
+    transform:rotate(var(--rotation5));
+    transform-origin: bottom center;
+    transition-duration: 600ms;
+
+}
+
+.gaugen .value {
+  position:absolute; bottom:0; left:0;
+  width:100%;
+  text-align: center;
+  font-weight: 800;
+
+}
+
+.TItitle{
+  position: absolute;
+  top: 170px;
+  left: 710px;
+
+}
+.Ntitle{
+  position: absolute;
+  top: 450px;
+  left: 380px;
+
+}
+.Ptitle{
+  position: absolute;
+  top: 450px;
+  left: 630px;
+
+}
+.Ttitle{
+  position: absolute;
+  top: 450px;
+  left: 1120px;
+
+}.Rtitle{
+  position: absolute;
+  top: 450px;
+  left: 870px;
+
+}
+ .lastup{
+  position: absolute;
+  top: 650px;
+  left: 650px;
+
+}
+.about{
+  position: absolute;
+  top: 800px;
+  left: 0px;
+
+}
+</style>
+</head>
+
+
+<body>
+<div class="header">
+  <h1> Cryptocurrency Buy/Sell Index </h1>
+<nav id="nav-wrap">
+
+      <ul id="nav" class="nav" style="list-style:none;padding-left: 0">
+        <li><a class="smoothscroll" href="#index">Index</a></li>
+        <li><a class="smoothscroll" href="#about">About</a></li>
+      </ul>
+
+    </nav>
+
+</div>
+<section id="index">
+<select id="cryptolist" onchange="changePage()">
+    <option selected="true" disabled="disabled" value=""></option>
+</select>
+
+<script>
+      function dropdown(){
+        cryptolist = getCryptolist();
+        var select = document.getElementById("cryptolist");
+        for(var i = 0; i < cryptolist.length; i++) {
+            var opt = cryptolist[i];
+            var el = document.createElement("option");
+            el.textContent = opt;
+            el.value = opt;
+            select.appendChild(el);
+        }
+        document.getElementById("cryptolist").value = cryptolist[0];
+      }
+      dropdown();
+
+      function changePage(){
+          cryptolist = getCryptolist();
+          var val = document.getElementById("cryptolist").value;
+          api_url = 'https://cryptoindex.cf/results/' + val;
+          for(var i = 0; i < cryptolist.length; i++){
+                if(val == cryptolist[i]){
+                    change(api_url)
+
+                }
+          }
+      }
+
+      async function change(api_url) {
+          const options = { 'content-type': 'application/json', method: 'GET', redirect: 'follow'};
+          let headers = new Headers();
+          // Storing response
+          const response = await fetch(api_url, options);
+          // Storing data in form of JSON
+          var data = await response.json();
+          console.log(data);
+          if (response) {
+            hideloader();
+          }
+          let indexes = getCryptopIndex(data);
+          return indexes;
+
+      }
+</script>
+
+<div class="TItitle">
+<h3>Total Index Value</h3>
+</div>
+  <div class="Ntitle">
+<h3>News Sentiment</h3>
+</div>
+
+</div>
+  <div class="Ptitle">
+<h3>Price Movement</h3>
+</div>
+
+</div>
+  <div class="Ttitle">
+<h3>Twitter Sentiment</h3>
+</div>
+
+</div>
+  <div class="Rtitle">
+<h3>Reddit Sentiment</h3>
+</div>
+
+  <div class="lastup">
+    <p>Last updated: <span id="lastupdated"></span></p>
+  </div>
+
+<div class="gauget" id="chart" style="width: 300px; --color:#5cb85c; --background:#e9ecef;">
+  <div class="percentage"></div>
+  <div class="mask"></div>
+  <span class="value" id="totindex">5%</span>
+  <span class="value" id="NotTotIndex"></span>
+</div>
+
+<div class="gaugep" id="chart1" style="width: 200px; --color:#5cb85c; --background:#e9ecef;">
+  <div class="percentage"></div>
+  <div class="mask"></div>
+  <span class="value" id="priceindex">5%</span>
+  <span class="value" id="NotPriceIndex"></span>
+
+</div>
+
+<div class="gauger" id="chart2" style="width: 200px; --color:#5cb85c; --background:#e9ecef;">
+  <div class="percentage"></div>
+  <div class="mask"></div>
+  <span class="value" id="redditindex">5%</span>
+  <span class="value" id="NotRedditIndex"></span>
+
+</div>
+
+<div class="gaugetw" id="chart3" style="width: 200px; --color:#5cb85c; --background:#e9ecef;">
+  <div class="percentage"></div>
+  <div class="mask"></div>
+  <span class="value" id="twitterindex">5%</span>
+  <span class="value" id="NotTwitterIndex"></span>
+
+</div>
+
+    <div class="gaugen" id="chart4" style="width: 200px; --color:#5cb85c; --background:#e9ecef;">
+  <div class="percentage"></div>
+  <div class="mask"></div>
+  <span class="value" id="newsindex">5%</span>
+  <span class="value" id="NotNewsIndex"></span>
+
+</div>
+</section>
+
+<section id="about">
+
+  <div class="about">
+    <span style="font-size:40px; font-weight: bolder">About: </span>
+    <p>This index is an informational tool on the current state of the cryptocurrency market. Its values signify:</p>
+    <ul>
+    <li>0 to 19: Strong Sell or Extremely Negative Sentiment</li>
+    <li>20 to 39: Sell or Negative Sentiment</li>
+    <li>40 to 60: Hold or Neutral Sentiment</li>
+    <li>61 to 80: Buy or Positive Sentiment</li>
+    <li>81 to 100: Strong Buy or Extremely Positive Sentiment</li>
+    </ul>
+    <p>The index is calculated using:</p>
+    <ul>
+    <li>50% weight from price action and technical analysis indicators</li>
+    <li>35% weight from sentiment analysis using NLP on recent news articles</li>
+    <li>15% weight from sentiment analysis on latest posts from Reddit and Twitter</li>
+
+    </ul>
+
+  </div>
+
+
+
+</section>
+</body>
+</html>
